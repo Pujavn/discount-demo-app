@@ -11,21 +11,25 @@ The package provides user-level discounts with assignment, revocation, eligibili
 - MySQL (or any DB supported by Laravel)
 - Node.js (optional, for frontend build)
 
----
 
-## 📦 Setup & Installation
+# User Discount Package Demo
 
-1. **Clone this repo**
-   ```bash
-   git clone https://github.com/pujav/discount-demo-app.git
-   cd discount-demo-app
+## Steps
 
-composer install
-
-cp .env.example .env
-php artisan key:generate
-php artisan migrate
-
-composer require pujanaik/user-discount:@dev
-php artisan vendor:publish --tag=user-discount-config
-php artisan migrate
+1. git clone https://github.com/yourname/discount-demo-app.git  
+2. cd discount-demo-app  
+3. composer install  
+4. cp .env.example .env  
+5. php artisan key:generate  
+6. Configure database in `.env`  
+7. php artisan migrate  
+8. composer require pujanaik/user-discount:@dev  
+9. php artisan vendor:publish --provider="PujaNaik\UserDiscount\UserDiscountServiceProvider"  
+10. php artisan migrate  
+11. php artisan db:seed --class=DiscountSeeder   (optional)  
+12. php artisan serve  
+13. Open [http://localhost:8000/discount-demo](http://localhost:8000/discount-demo)
+14. Run tests  
+    ```bash
+    composer test
+    ```
