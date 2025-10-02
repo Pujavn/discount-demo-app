@@ -1,0 +1,11 @@
+.has-help {
+    position: relative;
+    padding-bottom: 1.25rem;
+}
+
+/* space for helper */
+.has-help .form-text {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}

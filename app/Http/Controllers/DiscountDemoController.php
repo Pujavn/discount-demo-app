@@ -117,4 +117,45 @@ class DiscountDemoController extends Controller
             ],
         ]);
     }
+
+    public function store(Request $request)
+{
+    $data = $request->validate([
+        'name'          => ['required', 'string', 'max:120'],
+        'slug'          => ['required', 'string', 'max:120', 'alpha_dash', 'unique:discounts,slug'],
+        'type'          => ['required', 'in:percent,fixed'],
+        'value'         => ['required', 'numeric', 'min:0'],
+        'per_user_cap'  => ['nullable', 'integer', 'min:0'],
+        'priority'      => ['nullable', 'integer', 'min:0'],
+        'starts_at'     => ['nullable', 'date'],
+        'ends_at'       => ['nullable', 'date', 'after_or_equal:starts_at'],
+        'active'        => ['nullable', 'boolean'],
+    ]);
+
+    // Build payload for your schema (percent or fixed_minor)
+    $payload = [
+        'name'          => $data['name'],
+        'slug'          => $data['slug'],
+        'active'        => $request->boolean('active'),
+        'per_user_cap'  => $data['per_user_cap'] ?? null,
+        'priority'      => $data['priority'] ?? 0,
+        'starts_at'     => $data['starts_at'] ?? null,
+        'ends_at'       => $data['ends_at'] ?? null,
+    ];
+
+    if ($data['type'] === 'percent') {
+        $payload['percent'] = (int) $data['value']; // 0–100 expected
+        $payload['fixed_minor'] = null;
+    } else {
+        // value is rupees in the form; convert to minor units
+        $payload['fixed_minor'] = (int) round(((float) $data['value']) * 100);
+        $payload['percent'] = null;
+    }
+
+    \PujaNaik\UserDiscount\Models\Discount::create($payload);
+
+    return redirect()
+        ->route('discount.demo')
+        ->with('ok', 'Discount created successfully.');
+}
 }
